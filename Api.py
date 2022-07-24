@@ -1,8 +1,9 @@
 import sys
 from fastapi import FastAPI
+
 sys.path.insert(0,'./lib/')
 
-from linkedin import LinkedIn
+from basefiles import LinkedIn
 from pydantic import BaseModel
 
 class Cred(BaseModel):

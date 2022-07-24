@@ -1,5 +1,6 @@
 from linkedin_api import Linkedin
-from storedata import StoreData
+from .storedata import StoreData
+
 class LinkedIn:
     """
         LinkedIn class consists of all the base functionalities of LinkedIn
