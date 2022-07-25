@@ -7,6 +7,7 @@ import json
 import requests as req
 from .auth import Auth
 
+
 class Browser:
     """
         LinkedIn class consists of all the base functionalities of LinkedIn
@@ -29,6 +30,10 @@ class Browser:
         user_dict,temp,ret_dict = (dict(),dict(),dict())
         
         try:
+            
+            display = Display(visible=0, size=(800, 600))
+            display.start()
+    
             browser = web.Firefox()
             browser.get(self.linkedin_urls[0])
                 

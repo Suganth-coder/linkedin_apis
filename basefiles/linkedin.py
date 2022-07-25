@@ -14,10 +14,16 @@ class LinkedIn:
         self.headers["user-agent"] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36"  
         self.pre_url= "https://www.linkedin.com/voyager/api/"
     
-    def user_profile(self,profileID):
-        res = self.make_request(self.pre_url+f"identity/profiles/{profileID}/profileView")
-        return res
+    def get_details(self,profileID,detail=None):
         
+        if detail == "profile":
+            sub_url = f"identity/profiles/{profileID}/profileView"
+        elif detail == "conn":
+            sub_url = f"identity/profiles/{profileID}/networkinfo"
+            
+        res = self.make_request(self.pre_url+sub_url)
+        return res
+
     def test(self):
         self.make_request(self.pre_url+"identity/profiles/suganth-tag-9b198a239/networkinfo")
 
@@ -34,6 +40,11 @@ class LinkedIn:
                 print(s.headers["csrf-token"])
                 response = s.get(url)
                 response_dict = response.json()
+                
+                if "status" in response_dict.keys():
+                    if "status" != 200:
+                        return (400,"Error in retriving from LinkedIn")
+                    
                 print(response_dict)
                 
             return (200,response_dict)

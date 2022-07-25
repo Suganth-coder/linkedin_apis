@@ -7,7 +7,7 @@ from fastapi import FastAPI
 sys.path.insert(0,'./lib/')
 
 from typing import List, Optional
-from basefiles import Browser
+from basefiles import Browser,Auth
 from pydantic import BaseModel
 
 class LogIn(BaseModel):
@@ -33,6 +33,7 @@ class Error(BaseModel):
     error: str
     
 app = FastAPI()
+auth = Auth()
 
 @app.get("/")
 def main_func():
@@ -55,10 +56,27 @@ async def linkedin_creds(cred: Cred):
 @app.post("/profile")
 def user_profile(profile: Profile):
     
+    if auth.checktoken(profile.username) == False :
+        return Error(code=400,error="Not Logged in")
+    
     ln = LinkedIn(profile.username)
-    res = ln.user_profile(profile.public_id)
+    res = ln.get_details(profile.public_id,detail="profile")
     
     if res[0] == 200:
         return Resp(code=res[0],response=res[1])
-    # else:
-    #     return Error(code=res[0],error=res[1])
+    else:
+        return Error(code=res[0],error=res[1])
+    
+@app.post("/connections")
+def user_profile(profile: Profile):
+    
+    if auth.checktoken(profile.username) == False :
+        return Error(code=400,error="Not Logged in")
+        
+    ln = LinkedIn(profile.username)
+    res = ln.get_details(profile.public_id,detail="conn")
+    
+    if res[0] == 200:
+        return Resp(code=res[0],response=res[1])
+    else:
+        return Error(code=res[0],error=res[1])
