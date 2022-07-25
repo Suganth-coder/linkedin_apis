@@ -5,13 +5,15 @@ from pyvirtualdisplay import Display
 from .storedata import StoreData
 import json
 import requests as req
-
+from .auth import Auth
 
 class Browser:
     """
         LinkedIn class consists of all the base functionalities of LinkedIn
     """
     def __init__(self,username,password):
+        
+        self.auth = Auth()
         self.username,self.password = (username, password)
         self.sd = StoreData()
         self.linkedin_urls = ["https://www.linkedin.com/login","https://www.linkedin.com/feed/"]
@@ -23,27 +25,32 @@ class Browser:
                        
             @return STATUS_CODE
         """
-        user_dict,temp = (dict(),dict())
+        user_dict,temp,ret_dict = (dict(),dict(),dict())
         
-        browser = web.Firefox()
-        browser.get(self.linkedin_urls[0])
+        try:
+            browser = web.Firefox()
+            browser.get(self.linkedin_urls[0])
+                
+            email = browser.find_element(By.ID,"username")
+            pass_word = browser.find_element(By.ID,"password")
+                
+            email.send_keys(self.username)
+            pass_word.send_keys(self.password)
+            browser.find_element_by_css_selector('[data-litms-control-urn="login-submit"]').click()
             
-        email = browser.find_element(By.ID,"username")
-        pass_word = browser.find_element(By.ID,"password")
+            res = browser.get_cookies()
             
-        email.send_keys(self.username)
-        pass_word.send_keys(self.password)
-        browser.find_element_by_css_selector('[data-litms-control-urn="login-submit"]').click()
-        
-        res = browser.get_cookies()
-        
-        for cookie in res:
-            temp[cookie['name']] = cookie['value']
-        
-        user_dict[self.username] = temp
-        
-        # user_dict[self.username] = json.dumps(res)
-        self.sd.operate_file('test.txt','w',json.dumps(user_dict))
+            for cookie in res:
+                temp[cookie['name']] = cookie['value']
+            
+            user_dict[self.username] = temp
+            
+            # user_dict[self.username] = json.dumps(res)
+            self.sd.operate_file('test.txt','w',json.dumps(user_dict))
+            self.auth.gentoken(self.username,self.password)
+            
+        except Exception as e:
+            return 400
         
 
     def test(self):
