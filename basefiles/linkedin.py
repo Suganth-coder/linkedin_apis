@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from pyvirtualdisplay import Display
 from .storedata import StoreData
 import json
-
+import requests as req
 class LinkedIn:
     """
         LinkedIn class consists of all the base functionalities of LinkedIn
@@ -12,7 +12,7 @@ class LinkedIn:
     def __init__(self,username,password):
         self.username,self.password = (username, password)
         self.sd = StoreData()
-        self.linkedin_urls = ["https://www.linkedin.com/login"]
+        self.linkedin_urls = ["https://www.linkedin.com/login","https://www.linkedin.com/feed/"]
 
     def login(self):
         """
@@ -21,6 +21,7 @@ class LinkedIn:
                        
             @return STATUS_CODE
         """
+        user_dict = dict()
         browser = web.Firefox()
         browser.get(self.linkedin_urls[0])
             
@@ -30,9 +31,19 @@ class LinkedIn:
         email.send_keys(self.username)
         pass_word.send_keys(self.password)
         browser.find_element_by_css_selector('[data-litms-control-urn="login-submit"]').click()
-            
-        res = json.dumps(browser.get_cookies())
+        
+        res = browser.get_cookies()
+        print(browser.get_cookie('JSESSIONID'))
+        
+        user_dict[self.username] = json.dumps(res)
+        self.sd.operate_file('test.txt','w',json.dumps(user_dict))
+        
 
+    def test(self):
+        buff = self.sd.operate_file('test.txt','r')
+        dic = json.loads(buff)
+
+        
     def check_data_existance(self):
         pass
     
