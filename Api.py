@@ -32,21 +32,28 @@ async def login(ld: LogInData):
 @app.post("/login/linkedin")
 async def linkedin_creds(cred: Cred):
     
-    response = {"status":"failure","loggedIn":"No"}
-    br = Browser(username=cred.username, password=cred.password)
-    res = br.login()
+    check = auth.validate_token(token = cred.auth_token,username = cred.api_username)
     
-    print(f"res: {res}")
-    if "code" not in res.keys():
-        print("Res is none")
+    if check == 401:
+            return Error(code=400,error="Not Logged in")
+    if check == 400:
+        return Error(code=400,error="Invalid Auth Token")
+    elif check == 200:
     
-    else:    
-        return LogInLinkedIn(code=res['code'],status=res['status'],authenticated=res['authenticated'])
+        br = Browser(username=cred.linkedin_username, password=cred.linkedin_password)
+        res = br.login()
+        
+        print(f"res: {res}")
+        if "code" not in res.keys():
+            print("Res is none")
+        
+        else:    
+            return LogInLinkedIn(code=res['code'],status=res['status'],authenticated=res['authenticated'])
 
 @app.post("/profile")
 def user_profile(profile: Profile):
     
-    check = auth.validate_token(token = profile.auth_token,username = profile.username)
+    check = auth.validate_token(token = profile.auth_token,username = profile.api_username)
     
     if check == 401:
         return Error(code=400,error="Not Logged in")
@@ -54,7 +61,7 @@ def user_profile(profile: Profile):
         return Error(code=400,error="Invalid Auth Token")
     elif check == 200:
  
-        ln = LinkedIn(profile.username)
+        ln = LinkedIn(profile.linkedin_username)
         res = ln.get_details(profile.public_id,detail="profile")
         
         if res[0] == 200:
@@ -65,7 +72,7 @@ def user_profile(profile: Profile):
 @app.post("/connections")
 def user_profile(profile: Profile):
     
-    check = auth.validate_token(token = profile.auth_token,username = profile.username)
+    check = auth.validate_token(token = profile.auth_token,username = profile.api_username)
     
     if check == 401:
         return Error(code=400,error="Not Logged in")
@@ -73,10 +80,15 @@ def user_profile(profile: Profile):
         return Error(code=400,error="Invalid Auth Token")
     elif check == 200:
      
-        ln = LinkedIn(profile.username)
+        ln = LinkedIn(profile.linkedin_username)
         res = ln.get_details(profile.public_id,detail="conn")
         
         if res[0] == 200:
             return Resp(code=res[0],response=res[1])
         else:
             return Error(code=res[0],error=res[1])
+        
+@app.post("/logout")
+def logout(lg: LogoutData):
+    res = auth.logout(lg.api_username)
+    return Logout(code=res[0],status=res[1])

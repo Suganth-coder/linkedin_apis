@@ -113,3 +113,16 @@ class Auth:
         else:
             return (400,"Not Signed Up","Not Generated")
         
+    def logout(self,username):
+        
+        buff = self.sd.operate_file(self.signup_path,'r')
+        dic = json.loads(buff)
+        
+        if self.checktoken(username):
+            del dic[username]
+            self.sd.operate_file(self.token_path,'w',json.dumps(dic))
+            return (200,"Logged out")
+        else:
+            return (400,"Not LoggedIn or Invalid username")
+                    
+        

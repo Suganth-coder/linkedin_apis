@@ -24,15 +24,19 @@ class LogInLinkedIn(BaseModel):
     authenticated: str
     
 class Cred(BaseModel):
-    username: str
-    password: str
+    
+    api_username: str
+    auth_token: str
+    linkedin_username: str
+    linkedin_password: str
     
 class Resp(BaseModel):
     code: int
     response: dict
 
 class Profile(BaseModel):
-    username: str
+    api_username: str
+    linkedin_username:str
     public_id: str
     auth_token: str
     
@@ -40,3 +44,9 @@ class Error(BaseModel):
     code: int 
     error: str
     
+class LogoutData(BaseModel):
+    api_username: str
+    
+class Logout(BaseModel):
+    code: int
+    status: str
