@@ -16,7 +16,7 @@ class Auth:
             self.username,self.password = (username,password)
             word = username+self.salt+password+self.salt
             token = hash.sha1((hash.md5(word.encode()).hexdigest()).encode()).hexdigest()
-            print(self.savetoken(token))
+            self.savetoken(token)
             return 200
         
         except Exception as e:
@@ -57,10 +57,13 @@ class Auth:
         
     def gettoken(self,username):
         
-        buff = self.sd.operate_file(self.token_path,'r')
-        dic = json.loads(buff)
+        if self.checktoken(username):
+            buff = self.sd.operate_file(self.token_path,'r')
+            dic = json.loads(buff)
+            
+            return dic[username]
+        else:
+            return 400
         
-        return dic['username']
-    
 
         

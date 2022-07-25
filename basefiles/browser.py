@@ -44,19 +44,37 @@ class Browser:
                 temp[cookie['name']] = cookie['value']
             
             user_dict[self.username] = temp
-            
+            print("Before dict")
             # user_dict[self.username] = json.dumps(res)
             self.sd.operate_file('test.txt','w',json.dumps(user_dict))
-            self.auth.gentoken(self.username,self.password)
+            res = self.auth.gentoken(self.username,self.password)
+            token = self.auth.gettoken(self.username)
+            
+            print(f"Token: {token}")
+            
+            if res == 400: 
+                ret_dict['Error'] = "Error in token generation"
+            else:
+                ret_dict['token']=token
+                ret_dict['status']="LoggedIn"
+                ret_dict['authenticated']= "Yes"
+                ret_dict['code']=200
             
         except Exception as e:
-            return 400
+                ret_dict['token']=None
+                ret_dict['status']="Not LoggedIn"
+                ret_dict['authenticated']= "No"
+                ret_dict['code']=400
+            
+            
+        return ret_dict
         
 
     def test(self):
         buff = self.sd.operate_file('test.txt','r')
         dic = json.loads(buff)
         print(dic['suganthwork@gmail.com'])
+        
         
     def check_data_existance(self):
         pass
