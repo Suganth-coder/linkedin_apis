@@ -1,10 +1,11 @@
 import sys
+from basefiles.browser import Browser
 import sel
 from fastapi import FastAPI
 
 sys.path.insert(0,'./lib/')
 
-from basefiles import LinkedIn
+from basefiles import Browser
 from pydantic import BaseModel
 
 class Cred(BaseModel):
@@ -21,8 +22,8 @@ def main_func():
 async def linkedin_creds(cred: Cred):
     
     response = {"status":"failure","loggedIn":"No"}
-    ln = LinkedIn(username=cred.username, password=cred.password)
-    res = ln.login()
+    br = Browser(username=cred.username, password=cred.password)
+    res = br.login()
     
 
 @app.post("/local")
