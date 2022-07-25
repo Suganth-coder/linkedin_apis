@@ -17,13 +17,14 @@ class Browser:
         self.username,self.password = (username, password)
         self.sd = StoreData()
         self.linkedin_urls = ["https://www.linkedin.com/login","https://www.linkedin.com/feed/"]
+        self.cookie_path = "basefiles/user_creds/cookies.json"
 
     def login(self):
         """
             login() is used to login into the LinkedIn 
             1. Also,It gathers the cookies from the LinkedIn (if loggedin) 
                        
-            @return STATUS_CODE
+            @return DICT
         """
         user_dict,temp,ret_dict = (dict(),dict(),dict())
         
@@ -46,7 +47,7 @@ class Browser:
             user_dict[self.username] = temp
             print("Before dict")
             # user_dict[self.username] = json.dumps(res)
-            self.sd.operate_file('test.txt','w',json.dumps(user_dict))
+            self.sd.operate_file(self.cookie_path,'w',json.dumps(user_dict))
             res = self.auth.gentoken(self.username,self.password)
             token = self.auth.gettoken(self.username)
             
@@ -71,7 +72,7 @@ class Browser:
         
 
     def test(self):
-        buff = self.sd.operate_file('test.txt','r')
+        buff = self.sd.operate_file(self.cookie_path,'r')
         dic = json.loads(buff)
         print(dic['suganthwork@gmail.com'])
         
