@@ -27,6 +27,7 @@ class Resp(BaseModel):
 class Profile(BaseModel):
     username: str
     public_id: str
+    auth_token: str
     
 class Error(BaseModel):
     code: int 
@@ -56,27 +57,37 @@ async def linkedin_creds(cred: Cred):
 @app.post("/profile")
 def user_profile(profile: Profile):
     
-    if auth.checktoken(profile.username) == False :
+    check = auth.validate_token(token = profile.auth_token,username = profile.username)
+    
+    if check == 401:
         return Error(code=400,error="Not Logged in")
-    
-    ln = LinkedIn(profile.username)
-    res = ln.get_details(profile.public_id,detail="profile")
-    
-    if res[0] == 200:
-        return Resp(code=res[0],response=res[1])
-    else:
-        return Error(code=res[0],error=res[1])
+    if check == 400:
+        return Error(code=400,error="Invalid Auth Token")
+    elif check == 200:
+ 
+        ln = LinkedIn(profile.username)
+        res = ln.get_details(profile.public_id,detail="profile")
+        
+        if res[0] == 200:
+            return Resp(code=res[0],response=res[1])
+        else:
+            return Error(code=res[0],error=res[1])
     
 @app.post("/connections")
 def user_profile(profile: Profile):
     
-    if auth.checktoken(profile.username) == False :
-        return Error(code=400,error="Not Logged in")
-        
-    ln = LinkedIn(profile.username)
-    res = ln.get_details(profile.public_id,detail="conn")
+    check = auth.validate_token(token = profile.auth_token,username = profile.username)
     
-    if res[0] == 200:
-        return Resp(code=res[0],response=res[1])
-    else:
-        return Error(code=res[0],error=res[1])
+    if check == 401:
+        return Error(code=400,error="Not Logged in")
+    if check == 400:
+        return Error(code=400,error="Invalid Auth Token")
+    elif check == 200:
+     
+        ln = LinkedIn(profile.username)
+        res = ln.get_details(profile.public_id,detail="conn")
+        
+        if res[0] == 200:
+            return Resp(code=res[0],response=res[1])
+        else:
+            return Error(code=res[0],error=res[1])

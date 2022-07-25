@@ -65,5 +65,13 @@ class Auth:
         else:
             return 400
         
+    def validate_token(self,token,username):
+        if self.checktoken(username):
+            v_token = self.gettoken(username)
+            if v_token == token:
+                return 200
+            else: return 400
+        else:
+            return 401
 
         
