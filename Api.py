@@ -8,39 +8,28 @@ sys.path.insert(0,'./lib/')
 
 from typing import List, Optional
 from basefiles import Browser,Auth
-from pydantic import BaseModel
+from basefiles.ApiClass import *
 
-class LogIn(BaseModel):
-    code: int
-    status: str
-    token: str
-    authenticated: str
-    
-class Cred(BaseModel):
-    username: str
-    password: str
-    
-class Resp(BaseModel):
-    code: int
-    response: dict
 
-class Profile(BaseModel):
-    username: str
-    public_id: str
-    auth_token: str
-    
-class Error(BaseModel):
-    code: int 
-    error: str
-    
+
 app = FastAPI()
 auth = Auth()
 
 @app.get("/")
 def main_func():
-    return {"hello":"testing"}
+    return Error
+
+@app.post("/signup")
+async def signup(sd: SignUpData):
+    res = auth.signup(username=sd.username,password=sd.password,retype_pass=sd.retype_password)
+    return SignUp(code=res[0],status=res[1])
 
 @app.post("/login")
+async def login(ld: LogInData):
+    res = auth.login(username=ld.username,password=ld.password)
+    return LogIn(code=res[0],status=res[1],token=res[2])
+    
+@app.post("/login/linkedin")
 async def linkedin_creds(cred: Cred):
     
     response = {"status":"failure","loggedIn":"No"}
@@ -52,7 +41,7 @@ async def linkedin_creds(cred: Cred):
         print("Res is none")
     
     else:    
-        return LogIn(code=res['code'],status=res['status'],token=res['token'],authenticated=res['authenticated'])
+        return LogInLinkedIn(code=res['code'],status=res['status'],authenticated=res['authenticated'])
 
 @app.post("/profile")
 def user_profile(profile: Profile):

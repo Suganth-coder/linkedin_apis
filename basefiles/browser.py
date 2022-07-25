@@ -53,21 +53,15 @@ class Browser:
             print("Before dict")
             # user_dict[self.username] = json.dumps(res)
             self.sd.operate_file(self.cookie_path,'w',json.dumps(user_dict))
-            res = self.auth.gentoken(self.username,self.password)
-            token = self.auth.gettoken(self.username)
-            
-            print(f"Token: {token}")
             
             if res == 400: 
                 ret_dict['Error'] = "Error in token generation"
             else:
-                ret_dict['token']=token
                 ret_dict['status']="LoggedIn"
                 ret_dict['authenticated']= "Yes"
                 ret_dict['code']=200
             
         except Exception as e:
-                ret_dict['token']=None
                 ret_dict['status']="Not LoggedIn"
                 ret_dict['authenticated']= "No"
                 ret_dict['code']=400

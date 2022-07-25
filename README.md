@@ -9,4 +9,7 @@
 &ensp;__Enabling simple uvicorn web server__<br>
   &ensp;&ensp; ```python3 main.py```
 
-  
+## REST API
+---
+
+Login to 

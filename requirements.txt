@@ -235,6 +235,7 @@ python-slugify @ file:///tmp/build/80754af9/python-slugify_1620405669636/work
 python-snappy @ file:///tmp/build/80754af9/python-snappy_1610133040135/work
 python3-linkedin==1.0.2
 pytz==2021.3
+PyVirtualDisplay==3.0
 pyviz-comms @ file:///tmp/build/80754af9/pyviz_comms_1623747165329/work
 PyWavelets @ file:///tmp/build/80754af9/pywavelets_1648710015787/work
 pyxdg @ file:///tmp/build/80754af9/pyxdg_1603822279816/work
@@ -262,7 +263,7 @@ scipy @ file:///tmp/build/80754af9/scipy_1641555004408/work
 Scrapy @ file:///tmp/build/80754af9/scrapy_1646837771788/work
 seaborn @ file:///tmp/build/80754af9/seaborn_1629307859561/work
 SecretStorage @ file:///tmp/build/80754af9/secretstorage_1614022780358/work
-selenium==4.3.0
+selenium==3.141.0
 Send2Trash @ file:///tmp/build/80754af9/send2trash_1632406701022/work
 service-identity @ file:///Users/ktietz/demo/mc3/conda-bld/service_identity_1629460757137/work
 sip==4.19.13
