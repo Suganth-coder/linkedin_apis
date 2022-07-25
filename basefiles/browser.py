@@ -50,8 +50,6 @@ class Browser:
                 temp[cookie['name']] = cookie['value']
             
             user_dict[self.username] = temp
-            print("Before dict")
-            # user_dict[self.username] = json.dumps(res)
             self.sd.operate_file(self.cookie_path,'w',json.dumps(user_dict))
             
             if res == 400: 
@@ -73,7 +71,6 @@ class Browser:
     def test(self):
         buff = self.sd.operate_file(self.cookie_path,'r')
         dic = json.loads(buff)
-        print(dic['suganthwork@gmail.com'])
         
         
     def check_data_existance(self):

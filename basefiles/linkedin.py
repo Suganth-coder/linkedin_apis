@@ -15,6 +15,10 @@ class LinkedIn:
         self.pre_url= "https://www.linkedin.com/voyager/api/"
     
     def get_details(self,profileID,detail=None):
+        """
+            get_details() used to get the user's profile details
+            @return (code,details|errors)
+        """
         
         if detail == "profile":
             sub_url = f"identity/profiles/{profileID}/profileView"
@@ -23,9 +27,6 @@ class LinkedIn:
             
         res = self.make_request(self.pre_url+sub_url)
         return res
-
-    def test(self):
-        self.make_request(self.pre_url+"identity/profiles/suganth-tag-9b198a239/networkinfo")
 
     def make_request(self,url):
 

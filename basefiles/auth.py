@@ -16,7 +16,10 @@ class Auth:
         return hash.sha1((hash.md5(data.encode()).hexdigest()).encode()).hexdigest()
     
     def gentoken(self,username,password):
-        
+        """
+            gentoken() used to generate the token for users
+            @return code
+        """
         try:
             self.username,self.password = (username,password)
             word = username+self.salt+password+self.salt
@@ -28,6 +31,10 @@ class Auth:
             return 400
 
     def savetoken(self,token):
+        """
+            savetoken() used to save the generated token in token.json
+            @return token
+        """
         
         token_dict = {self.username:token}
         try:
@@ -87,7 +94,10 @@ class Auth:
         return self.checkaccess(username,self.signup_path)
     
     def signup(self,username,password,retype_pass):
-        
+        """
+            signup() used to signup for RESTAPI
+            @return (code,Msg|Error)
+        """
         if self.check_signup(username) == True: 
             return (400,"Already Signed Up")
         else:
@@ -100,6 +110,10 @@ class Auth:
             else: return (400,"Passwords Doesn't Match")
     
     def login(self,username,password):
+        """
+            login() used to login for RESTAPI
+            @return (code,Msg|Error)
+        """
         
         buff = self.sd.operate_file(self.signup_path,'r')
         dic = json.loads(buff)
