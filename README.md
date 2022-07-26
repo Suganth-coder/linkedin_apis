@@ -1,4 +1,4 @@
-## Commands for intial setup <br>
+## Commands for Initial setup <br>
 
 &ensp;__Enabling the Python Virtual env [ In Linux Env ]__ <br>
 
